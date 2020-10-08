@@ -1,4 +1,4 @@
-const Activities  = require('../models/ActivitiesModels');
+const Activities = require('../models/ActivitiesModels');
 const User = require('../models/UserModels');
 
 const userController = {};
@@ -33,14 +33,20 @@ userController.updateUserData = async (req, res, next) => {
   }
 
   // contains the fields from req.body
-  const queryResult = await User.findByIdAndUpdate(id, userData, {new: true}); // new true sends back the updated user obj
+  try {
+    const queryResult = await User.findByIdAndUpdate(id, userData, {new: true}); // new true sends back the updated user obj
+    res.locals.data = queryResult;
+    const onlyActivities = queryResult.preferred_activities.map(obj => {
+      return obj.activity.toLowerCase();
+    });
+    Activities.updateMany({name: {$in: onlyActivities}}, { $push: {users: queryResult._id}})
+    return next();
+  } catch (err) {
+    res.send(404);
+    console.log(err.reason);
+    return next();
+  }
   // update the activites collection
-  res.locals.data = queryResult;
-  const onlyActivities = queryResult.preferred_activities.map(obj => {
-    return obj.activity.toLowerCase();
-  });
-  Activities.updateMany({name: {$in: onlyActivities}}, { $push: {users: queryResult._id}})
-  return next();
 };
 
 userController.deleteUserData = async (req, res, next) => {

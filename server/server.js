@@ -5,7 +5,6 @@ const bodyParser = require("body-parser");
 const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
 const usersRouter = require("./routers/users");
-const mainRouter = require('./routers/main.js')
 const formatMessage = require('../utils/messages');
 
 // SETTING UP SERVER
@@ -39,7 +38,6 @@ app.use(express.static(path.join(__dirname, '../client/')));
 
 
 app.use("/api", usersRouter);
-app.use("/main", mainRouter);
 
 // DIRECT ALL INCOMING TRAFFIC TO HOMEPAGE
 app.use('/', (req, res) => {

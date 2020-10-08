@@ -6,6 +6,7 @@ import { ChatBoxHeader } from './Chat/ChatBoxHeader.jsx';
 import { ChatBox } from './Chat/ChatBox.jsx';
 import { Message } from './Chat/Message.jsx';
 import formatMessage from '../../../../utils/messages';
+import { useStateValue , StateContext , createContext} from '../../../StateProvider';
 
 const ChatContainerStyle = styled.div`
 	display: flex;
@@ -24,17 +25,17 @@ const ChatContainerRightStyle = styled.div`
 export function ChatContainer({ selectedPartner }) {
 	console.log('selectedPartner: ', selectedPartner);
 	const [messages, setMessages] = useState([]);
-	const [componentMessages, setComponentMessages] = useState([]);
+  const [componentMessages, setComponentMessages] = useState([]);
+  // CONTEXT API, RELEVENT STATE ELEMENTS
+  const [{ userInfo , petInfo }, dispatch] = useStateValue();
 
 	// Output message to DOM
 	function outputMessage(message) {
 		messages.push(message);
 		setMessages(messages);
 		let messageList = [];
-		for (let i = 0; i < messages.length; i += 1) {
-			messageList.push(
-				<Message messageInfo={messages[i]} key={`message${i}`} />
-			);
+		for (let i = 0; i < messages.length; i+=1) {
+			messageList.push(<Message messageInfo={messages[i]} key={`message${i}`} selectedPartner={selectedPartner} currentId={userInfo._id} userInfo={userInfo}/>)
 		}
 		setComponentMessages(messageList);
 		// const div = document.createElement('div');
@@ -84,11 +85,11 @@ export function ChatContainer({ selectedPartner }) {
 			e.target.elements.msg.focus();
 		});
 	}, []);
-
+  
 	return (
 		<ChatContainerStyle>
 			<ChatContainerLeftStyle>
-				<ChatBoxHeader />
+				<ChatBoxHeader selectedPartner={selectedPartner} />
 				<ChatBox chat={componentMessages} />
 				<InputContainer />
 			</ChatContainerLeftStyle>

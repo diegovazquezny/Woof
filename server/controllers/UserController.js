@@ -102,7 +102,20 @@ const fetchUserData = async (userData) => {
   return result;
 }
 
-
-
-
 module.exports = userController;
+
+/*
+{
+  profile_img: userInfo.avatarUrl,
+  user_age: userInfo.age,
+  location: userInfo.location,
+  dog_name: petInfo.name,
+  dog_image: petInfo.avatarUrl,
+  dog_age: petInfo.age,
+  dog_size: petInfo.size,
+  dog_breed: petInfo.breed
+}
+
+
+*/
+
